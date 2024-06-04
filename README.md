@@ -79,8 +79,6 @@ from transformers import AutoTokenizer, AutoModel, AutoImageProcessor
 from PIL import Image
 import requests
 
-
-
 processor = AutoImageProcessor.from_pretrained("nomic-ai/nomic-embed-vision-v1.5")
 vision_model = AutoModel.from_pretrained("nomic-ai/nomic-embed-vision-v1.5", trust_remote_code=True)
 
