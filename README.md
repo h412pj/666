@@ -48,7 +48,7 @@ For more information, see the [API reference](https://docs.nomic.ai/reference/en
 Click the Nomic Atlas map below to visualize a 100,000 sample CC3M comparing the Vision and Text Embedding Space!
 
 
-[![image/webp](https://cdn-uploads.huggingface.co/production/uploads/607997c83a565c15675055b3/pjhJhuNyRfPagRd_c_iUz.webp)](https://atlas.nomic.ai/data/nomic-multimodal-series/cc3m-100k-image-bytes-v15/map)
+[![image/webp](https://cdn-uploads.huggingface.co/production/uploads/607997c83a565c15675055b3/aKJogjDQ4BBiYGRIIrFMa.webp)](https://atlas.nomic.ai/data/nomic-multimodal-series/cc3m-100k-image-bytes-v15/map)
 
 ## Training Details
 
