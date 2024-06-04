@@ -20,3 +20,32 @@ All Nomic Embed Text models are now **multimodal**!
 | OpenAI CLIP ViT B/16             | 68.3            | 56.3               | 43.82     |
 | Jina CLIP v1                     | 59.1            | 52.2               | 60.1      |
 
+
+## Hosted Inference API
+
+The easiest way to get started with Nomic Embed is through the Nomic Embedding API.
+
+Generating embeddings with the `nomic` Python client is as easy as 
+```python
+from nomic import embed
+import numpy as np
+
+output = embed.image(
+    images=[
+        "image_path_1.jpeg",
+        "image_path_2.png",
+    ],
+    model='nomic-embed-vision-v1.5',
+)
+
+print(output['usage'])
+embeddings = np.array(output['embeddings'])
+print(embeddings.shape)
+```
+For more information, see the [API reference](https://docs.nomic.ai/reference/endpoints/nomic-embed-vision)
+
+## Data Visualization
+Click the Nomic Atlas map below to visualize a 100,000 sample CC3M comparing the Vision and Text Embedding Space!
+
+
+[![image/webp](https://cdn-uploads.huggingface.co/production/uploads/607997c83a565c15675055b3/pjhJhuNyRfPagRd_c_iUz.webp)](https://atlas.nomic.ai/data/nomic-multimodal-series/cc3m-100k-image-bytes-v15/map)
