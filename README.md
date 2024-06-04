@@ -49,3 +49,80 @@ Click the Nomic Atlas map below to visualize a 100,000 sample CC3M comparing the
 
 
 [![image/webp](https://cdn-uploads.huggingface.co/production/uploads/607997c83a565c15675055b3/pjhJhuNyRfPagRd_c_iUz.webp)](https://atlas.nomic.ai/data/nomic-multimodal-series/cc3m-100k-image-bytes-v15/map)
+
+## Training Details
+
+We align our vision embedder to the text embedding by employing a technique similar to [LiT](https://arxiv.org/abs/2111.07991) but instead lock the text embedder!
+
+For more details, see the Nomic Embed Vision Technical Report (soon to be released!) and corresponding [blog post](https://blog.nomic.ai/posts/nomic-embed-vision)
+
+Training code is released in the `contrastors` [repository](https://github.com/nomic-ai/contrastors)
+
+## Usage
+
+Note `nomic-embed-text` *requires* prefixes! We support the prefixes `[search_query, search_document, classification, clustering]`.
+For retrieval applications, you should prepend `search_document` for all your documents and `search_query` for your queries.
+
+For example, you are building a RAG application over the top of Wikipedia. You would embed all Wikipedia articles with the prefix `search_document`
+and any questions you ask with `search_query`. For example:
+```python
+queries = ["search_query: who is the first president of the united states?", "search_query: when was babe ruth born?"]
+documents = ["search_document: <article about US Presidents>", "search_document: <article about Babe Ruth>"]
+```
+You can 
+### Transformers
+
+```python
+import torch
+import torch.nn.functional as F
+from transformers import AutoTokenizer, AutoModel, AutoImageProcessor
+from PIL import Image
+import requests
+
+
+
+processor = AutoImageProcessor.from_pretrained("nomic-ai/nomic-embed-vision-v1.5")
+vision_model = AutoModel.from_pretrained("nomic-ai/nomic-embed-vision-v1.5", trust_remote_code=True)
+
+url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+image = Image.open(requests.get(url, stream=True).raw)
+
+inputs = processor(image, return_tensors="pt")
+
+img_emb = vision_model(**inputs).last_hidden_state
+img_embeddings = F.normalize(img_emb[:, 0], p=2, dim=1)
+```
+
+Additionally, you can perform multimodal retrieval!
+
+```python
+
+def mean_pooling(model_output, attention_mask):
+    token_embeddings = model_output[0]
+    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+
+sentences = ['search_query: What are cute animals to cuddle with?', 'search_query: What do cats look like?']
+
+tokenizer = AutoTokenizer.from_pretrained('nomic-ai/nomic-embed-text-v1.5')
+text_model = AutoModel.from_pretrained('nomic-ai/nomic-embed-text-v1.5', trust_remote_code=True)
+text_model.eval()
+
+encoded_input = tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
+
+with torch.no_grad():
+    model_output = text_model(**encoded_input)
+
+text_embeddings = mean_pooling(model_output, encoded_input['attention_mask'])
+text_embeddings = F.layer_norm(text_embeddings, normalized_shape=(text_embeddings.shape[1],))
+text_embeddings = F.normalize(text_embeddings, p=2, dim=1)
+
+print(torch.matmul(img_embeddings, text_embeddings.T))
+```
+
+
+# Join the Nomic Community
+
+- Nomic: [https://nomic.ai](https://nomic.ai)
+- Discord: [https://discord.gg/myY5YDR8z8](https://discord.gg/myY5YDR8z8)
+- Twitter: [https://twitter.com/nomic_ai](https://twitter.com/nomic_ai)
