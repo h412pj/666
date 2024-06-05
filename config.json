@@ -5,8 +5,8 @@
   ],
   "attn_pdrop": 0.0,
   "auto_map": {
-    "AutoConfig": "configuration_hf_nomic_bert.NomicBertConfig",
-    "AutoModel": "modeling_hf_nomic_bert.NomicVisionModel"
+    "AutoConfig": "nomic-ai/nomic-bert-2048--configuration_hf_nomic_bert.NomicBertConfig",
+    "AutoModel": "nomic-ai/nomic-bert-2048--modeling_hf_nomic_bert.NomicVisionModel"
   },
   "bos_token_id": null,
   "causal": false,
