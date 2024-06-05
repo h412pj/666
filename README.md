@@ -60,16 +60,9 @@ Training code is released in the `contrastors` [repository](https://github.com/n
 
 ## Usage
 
-Note `nomic-embed-text` *requires* prefixes! We support the prefixes `[search_query, search_document, classification, clustering]`.
-For retrieval applications, you should prepend `search_document` for all your documents and `search_query` for your queries.
+Remember `nomic-embed-text` *requires* prefixes and so, when using Nomic Embed in multimodal RAG scenarios (e.g. text to image retrieval),
+you should use the `search_query: ` prefix. 
 
-For example, you are building a RAG application over the top of Wikipedia. You would embed all Wikipedia articles with the prefix `search_document`
-and any questions you ask with `search_query`. For example:
-```python
-queries = ["search_query: who is the first president of the united states?", "search_query: when was babe ruth born?"]
-documents = ["search_document: <article about US Presidents>", "search_document: <article about Babe Ruth>"]
-```
-You can 
 ### Transformers
 
 ```python
